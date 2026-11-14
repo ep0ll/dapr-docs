@@ -35,6 +35,7 @@ Parameter | Description
 `ttl` | An optional time to live or expiration of the job. Accepts a "point in time" string in the format of RFC3339, Go duration string (calculated from job creation time), or non-repeating ISO8601.
 `overwrite` | A boolean value to specify if the job can overwrite an existing one with the same name. Default value is `false`
 `failure_policy` | An optional failure policy for the job. Details of the format are below. If not set, the job is retried up to 3 times with a delay of 1 second between retries.
+`overrideRoutePath` | An optional relative HTTP callback path under `/job/`. It does not change the job name or scheduler identity. If omitted, the callback path remains `/job/{name}`. Do not include leading or trailing slashes, empty segments, `.` or `..` segments.
 
 {{% alert title="Note" color="primary" %}}
 From Dapr 1.19, job names can contain the pipe character (`|`) and `@`. A job name is still rejected if it contains a character that is unsafe in an HTTP path segment (such as `/`, `\`, `#`, `?`, a newline, or a NUL byte), is `.` or `..`, or exceeds the maximum length.
@@ -134,7 +135,8 @@ It can be set to `constant` or `drop`.
 ```json
 {
   "data": "some data",
-  "dueTime": "30s"
+  "dueTime": "30s",
+  "overrideRoutePath": "sync-video-state/video-id"
 }
 ```
 
@@ -196,7 +198,8 @@ $ curl -X GET http://localhost:3500/v1.0/jobs/jobforjabba -H "Content-Type: appl
   "name": "jobforjabba",
   "schedule": "@every 1m",
   "repeats": 5,
-  "data": 123
+  "data": 123,
+  "overrideRoutePath": "sync-video-state/video-id"
 }
 ```
 ## Delete a job

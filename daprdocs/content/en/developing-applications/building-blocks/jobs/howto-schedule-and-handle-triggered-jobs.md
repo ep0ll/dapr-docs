@@ -171,7 +171,7 @@ func main() {
 }
 ```
 
-The job is scheduled with a `Schedule` set and the amount of `Repeats` desired. These settings determine a max amount of times the job should be triggered and sent back to the app. 
+The job is scheduled with a `Schedule` set and the amount of `Repeats` desired. These settings determine a max amount of times the job should be triggered and sent back to the app. The optional `OverrideRoutePath` routes it to `/job/database/backup` while preserving `prod-db-backup` as the job name. 
 
 In this example, at trigger time, which is `@every 1s` according to the `Schedule`, this job is triggered and sent back to the application up to the max `Repeats` (`10`). 
 
@@ -179,9 +179,10 @@ In this example, at trigger time, which is `@every 1s` according to the `Schedul
     // ...
     // Set up the job
 	job := daprc.Job{
-		Name:     "prod-db-backup",
-		Schedule: "@every 1s",
-		Repeats:  10,
+		Name:              "prod-db-backup",
+		Schedule:          "@every 1s",
+		Repeats:           10,
+		OverrideRoutePath: "database/backup",
 		Data: &anypb.Any{
 			Value: jobData,
 		},
