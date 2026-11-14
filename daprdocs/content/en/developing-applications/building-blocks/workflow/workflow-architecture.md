@@ -186,7 +186,15 @@ The size of the batch is also impacted by the size of inputs and outputs when wo
 
 Different state store implementations may implicitly put restrictions on the types of workflows you can author.
 For example, the Azure Cosmos DB state store limits item sizes to 2 MB of UTF-8 encoded JSON ([source](https://learn.microsoft.com/azure/cosmos-db/concepts-limits#per-item-limits)).
-The input or output payload of an activity or child workflow is stored as a single record in the state store, so a item limit of 2 MB means that workflow and activity inputs and outputs can't exceed 2 MB of JSON-serialized data.
+The input or output payload of an activity or child workflow is stored as a single record in the state store, so an item limit of 2 MB means that workflow and activity inputs and outputs can't exceed 2 MB of JSON-serialized data.
+
+Keep workflow and activity inputs and outputs small: pass identifiers, status, timestamps, and other
+metadata through workflow history, and store large objects in a Dapr Binary Store. Pass a
+versioned `$daprRef` payload reference containing the component name and object key instead of the
+full object. The Binary Store is separate from the actor state store used for workflow history, so
+workflow history retention and purge operations do not automatically remove referenced objects.
+Applications should manage the retention of those objects without deleting data that a live or
+replayable workflow still needs.
 
 Similarly, if a state store imposes restrictions on the size of a batch transaction, that may limit the number of parallel actions that can be scheduled by a workflow.
 
