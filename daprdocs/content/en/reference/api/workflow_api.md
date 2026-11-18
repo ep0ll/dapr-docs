@@ -149,16 +149,25 @@ Parameter | Description
 
 ### Request content
 
-The request body must be a JSON object describing the failure. The `errorType` field is required and must contain a non-empty string. The `errorMessage` field is optional.
+The request body must be a JSON object describing the failure. The `errorType` field is required and must contain a non-empty string. The other fields are optional.
+
+Field | Type | Description
+----- | ---- | -----------
+`errorType` | string | Required. The error type used when delivering the failure to the workflow.
+`errorMessage` | string | Error message describing the failure.
+`stackTrace` | string | Stack trace associated with the failure.
+`innerFailure` | object | Nested failure details, using the same fields.
+`isNonRetriable` | boolean | Indicates whether the failure should be treated as non-retriable.
 
 ```json
 {
-  "errorType": "ExternalError",
-  "errorMessage": "The payment could not be processed"
+  "errorType": "PaymentFailed",
+  "errorMessage": "The payment could not be processed",
+  "stackTrace": "PaymentService.Process: payment provider returned a decline"
 }
 ```
 
-The workflow runtime uses these details to construct the exception delivered to the workflow's external-event wait. The exception type and message are available to the workflow's normal error-handling logic.
+The workflow runtime delivers these failure details to the named external-event wait as an exception. The workflow can handle that exception through its normal exception-handling logic.
 
 ### HTTP response codes
 
