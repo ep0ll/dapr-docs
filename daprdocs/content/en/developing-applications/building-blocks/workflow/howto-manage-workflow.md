@@ -632,6 +632,18 @@ curl -X POST "http://localhost:3500/v1.0/workflows/<workflowComponentName>/<inst
 
 > An `eventName` can be any function. 
 
+### Raise an error
+
+When an external operation fails, raise an error for the event the workflow is waiting for. The workflow receives an exception instead of a regular event payload and can handle it with its normal exception-handling logic.
+
+```shell
+curl -X POST "http://localhost:3500/v1.0/workflows/dapr/order-12345/raiseError/PaymentReceived" \
+  -H "Content-Type: application/json" \
+  -d '{"errorType":"PaymentFailed","errorMessage":"The payment could not be processed"}'
+```
+
+The `errorType` field is required and must be a non-empty string. The `errorMessage` field is optional. Use the same event name that the workflow passes to its external-event wait. To target a workflow hosted by another application, add its `appID` as a query parameter; the target application's [workflow access policy]({{% ref workflow-access-policy.md %}}) determines whether the call is permitted.
+
 ### Pause or resume a workflow
 
 To plan for down-time, wait for inputs, and more, you can pause and then resume a workflow. To pause a workflow with an ID `12345678` until triggered to resume, run:
