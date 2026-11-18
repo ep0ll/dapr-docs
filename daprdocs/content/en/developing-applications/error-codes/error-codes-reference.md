@@ -49,6 +49,8 @@ An effort is underway to enrich all gRPC error responses according to the [Riche
 | `ERR_TERMINATE_WORKFLOW`           |           | Error terminating workflow                                                              |
 | `ERR_PURGE_WORKFLOW`               |           | Error purging workflow                                                                  |
 | `ERR_RAISE_EVENT_WORKFLOW`         |           | Error raising event in workflow                                                         |
+| `ERR_RAISE_ERROR_WORKFLOW`         |           | Error raising an error in a workflow                                                     |
+| `ERR_RAISE_ERROR_WORKFLOW_INVALID_DETAILS` |           | Invalid workflow error details                                                          |
 | `ERR_WORKFLOW_COMPONENT_MISSING`   |           | Missing workflow component                                                              |
 | `ERR_WORKFLOW_COMPONENT_NOT_FOUND` |           | Workflow component not found                                                            |
 | `ERR_WORKFLOW_EVENT_NAME_MISSING`  |           | Missing workflow event name                                                             |
