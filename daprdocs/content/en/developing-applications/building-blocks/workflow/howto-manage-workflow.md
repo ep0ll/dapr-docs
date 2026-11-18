@@ -644,6 +644,15 @@ curl -X POST "http://localhost:3500/v1.0/workflows/dapr/order-12345/raiseError/P
 
 The `errorType` field is required and must be a non-empty string. The `errorMessage` field is optional. Use the same event name that the workflow passes to its external-event wait. To target a workflow hosted by another application, add its `appID` as a query parameter; the target application's [workflow access policy]({{% ref workflow-access-policy.md %}}) determines whether the call is permitted.
 
+You can also raise the same failure with the Dapr CLI:
+
+```shell
+dapr workflow raise-error order-12345/PaymentReceived \
+  --failure-details '{"errorType":"PaymentFailed","errorMessage":"The payment could not be processed"}'
+```
+
+The CLI accepts the complete structured failure details as JSON, including optional stack trace, nested failure, and non-retriable fields.
+
 ### Pause or resume a workflow
 
 To plan for down-time, wait for inputs, and more, you can pause and then resume a workflow. To pause a workflow with an ID `12345678` until triggered to resume, run:
