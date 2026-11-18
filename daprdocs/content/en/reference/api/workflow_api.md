@@ -130,6 +130,48 @@ Code | Description
 
 None.
 
+## Raise Error request
+
+For workflow components that support subscribing to external events, such as the Dapr Workflow engine, use the raise error API to deliver a failure to a specific workflow instance waiting for the named event. Unlike raising an event, raising an error completes the external-event wait with an exception that the workflow can handle through its normal exception-handling logic.
+
+```
+POST http://localhost:<daprPort>/v1.0/workflows/<workflowComponentName>/<instanceID>/raiseError/<eventName>
+```
+
+### URL parameters
+
+Parameter | Description
+--------- | -----------
+`workflowComponentName` | Use `dapr` for Dapr Workflows
+`instanceID` | Unique value created for each run of a specific workflow
+`appID` | (Optional) App ID of the application hosting the workflow instance. Defaults to the local app. The target app must be in the same namespace and its [workflow access policy]({{% ref workflow-access-policy %}}) governs whether the call is permitted.
+`eventName` | Name of the external event the workflow is waiting for
+
+### Request content
+
+The request body must be a JSON object describing the failure. The `errorType` field is required and must contain a non-empty string. The `errorMessage` field is optional.
+
+```json
+{
+  "errorType": "ExternalError",
+  "errorMessage": "The payment could not be processed"
+}
+```
+
+The workflow runtime uses these details to construct the exception delivered to the workflow's external-event wait. The exception type and message are available to the workflow's normal error-handling logic.
+
+### HTTP response codes
+
+Code | Description
+---- | -----------
+`202` | Accepted
+`400` | Request was malformed or the failure details are invalid (including a missing or empty `errorType`)
+`500` | Request formatted correctly, but an error occurred in Dapr or the underlying workflow component
+
+### Response content
+
+None.
+
 ## Pause workflow request
 
 Pause a running workflow instance.
